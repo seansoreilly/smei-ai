@@ -1,12 +1,6 @@
 import { NextRequest } from 'next/server';
 import { db } from '@/lib/db';
-import OpenAI from 'openai';
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-const SYSTEM_PROMPT = 'You are a helpful assistant. Provide concise, helpful responses.';
+import { llmOrchestration } from '@/lib/llm-orchestration';
 
 export async function POST(request: NextRequest) {
   try {
@@ -50,21 +44,29 @@ export async function POST(request: NextRequest) {
       ORDER BY created_at ASC
     `;
 
-    const messages = [
-      { role: 'system' as const, content: SYSTEM_PROMPT },
+    const conversationMessages = [
       ...previousMessages.map((msg) => ({
-        role: msg.role as 'user' | 'assistant',
+        role: msg.role as 'user' | 'assistant' | 'system',
         content: msg.content as string,
       }))
     ];
 
-    const stream = await openai.chat.completions.create({
+    if (conversationMessages.length === 0 || conversationMessages[0].role !== 'system') {
+      conversationMessages.unshift({ role: 'system', content: '' });
+    }
+
+    const { messages: processedMessages, stage, followUpQuestions } = await llmOrchestration.processConversation(
+      conversationId,
+      conversationMessages
+    );
+
+    const stream = await llmOrchestration.createChatCompletion(processedMessages, {
       model: 'gpt-3.5-turbo',
-      messages,
       max_tokens: 1000,
       temperature: 0.7,
       stream: true,
-    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }) as unknown as AsyncIterable<any>;
 
     let fullResponse = '';
     const encoder = new TextEncoder();
@@ -89,6 +91,11 @@ export async function POST(request: NextRequest) {
             VALUES (gen_random_uuid(), ${conversationId}, 'assistant', ${fullResponse}, NOW())
           `;
 
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ 
+            content: '', 
+            stage, 
+            followUpQuestions: followUpQuestions.slice(0, 3)
+          })}\n\n`));
           controller.enqueue(encoder.encode('data: [DONE]\n\n'));
           controller.close();
         } catch (error) {
