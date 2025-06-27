@@ -1,0 +1,169 @@
+{
+  "knowledge_base_metadata": {
+    "created_date": "2025-06-27",
+    "version": "1.0",
+    "total_documents": 8,
+    "industries_covered": 4,
+    "content_types": ["guides", "case_studies", "service_descriptions", "implementation_frameworks"],
+    "target_audience": "Australian SMEs (1-199 employees)",
+    "update_frequency": "quarterly"
+  },
+  "document_inventory": [
+    {
+      "file_path": "agriculture/precision-farming-guide.md",
+      "title": "Precision Farming with AI for Small to Medium Australian Farms",
+      "industry": "agriculture",
+      "content_type": "implementation_guide",
+      "word_count": 6500,
+      "key_topics": ["crop_monitoring", "soil_management", "weather_prediction", "livestock_management", "roi_analysis"],
+      "sme_focus": "both_small_and_medium",
+      "implementation_complexity": "medium",
+      "estimated_investment_range": "$5000-$50000"
+    },
+    {
+      "file_path": "agriculture/crop-monitoring-ai.md", 
+      "title": "AI-Powered Crop Monitoring for Australian SME Farms",
+      "industry": "agriculture",
+      "content_type": "technical_guide",
+      "word_count": 8500,
+      "key_topics": ["satellite_monitoring", "drone_inspection", "smartphone_solutions", "cost_benefit_analysis", "success_stories"],
+      "sme_focus": "both_small_and_medium",
+      "implementation_complexity": "low_to_medium",
+      "estimated_investment_range": "$2000-$25000"
+    },
+    {
+      "file_path": "clean-energy/smart-grid-optimization.md",
+      "title": "AI-Driven Smart Grid Optimization for Australian SMEs",
+      "industry": "clean_energy",
+      "content_type": "implementation_guide",
+      "word_count": 9500,
+      "key_topics": ["demand_forecasting", "renewable_integration", "predictive_maintenance", "energy_trading", "grid_optimization"],
+      "sme_focus": "both_small_and_medium",
+      "implementation_complexity": "medium_to_high",
+      "estimated_investment_range": "$50000-$1000000"
+    },
+    {
+      "file_path": "medical/diagnostic-ai-systems.md",
+      "title": "AI-Powered Diagnostic Systems for Australian Medical SMEs",
+      "industry": "medical",
+      "content_type": "implementation_guide", 
+      "word_count": 12000,
+      "key_topics": ["medical_imaging", "pathology_diagnostics", "clinical_decision_support", "regulatory_compliance", "case_studies"],
+      "sme_focus": "both_small_and_medium",
+      "implementation_complexity": "medium_to_high",
+      "estimated_investment_range": "$10000-$500000"
+    },
+    {
+      "file_path": "enabling-capabilities/manufacturing-automation.md",
+      "title": "AI-Driven Manufacturing Automation for Australian SMEs",
+      "industry": "enabling_capabilities",
+      "content_type": "implementation_guide",
+      "word_count": 11500,
+      "key_topics": ["predictive_maintenance", "quality_control", "production_optimization", "process_automation", "industry_4_0"],
+      "sme_focus": "both_small_and_medium", 
+      "implementation_complexity": "medium_to_high",
+      "estimated_investment_range": "$25000-$500000"
+    },
+    {
+      "file_path": "smec-ai-services/consultation-services.md",
+      "title": "SMEC AI Consultation Services for Australian SMEs",
+      "industry": "all_industries",
+      "content_type": "service_description",
+      "word_count": 8500,
+      "key_topics": ["consultation_framework", "industry_specific_guidance", "implementation_planning", "roi_analysis", "ongoing_support"],
+      "sme_focus": "both_small_and_medium",
+      "service_type": "consultation",
+      "availability": "500+ consultations available"
+    },
+    {
+      "file_path": "smec-ai-services/ai-studio-program.md",
+      "title": "SMEC AI Studio Program: 8-Week Intensive AI Development for SMEs",
+      "industry": "all_industries",
+      "content_type": "service_description",
+      "word_count": 10500,
+      "key_topics": ["8_week_program", "custom_ai_development", "mentorship", "technical_workshops", "implementation_support"],
+      "sme_focus": "both_small_and_medium",
+      "service_type": "intensive_program",
+      "duration": "8_weeks"
+    },
+    {
+      "file_path": "smec-ai-services/short-courses.md",
+      "title": "SMEC AI Short Courses: Skills Development for Australian SMEs",
+      "industry": "all_industries", 
+      "content_type": "service_description",
+      "word_count": 9500,
+      "key_topics": ["foundation_courses", "industry_specific_training", "technical_skills", "certification", "professional_development"],
+      "sme_focus": "both_small_and_medium",
+      "service_type": "training_courses",
+      "delivery_formats": ["in_person", "virtual", "hybrid"]
+    }
+  ],
+  "content_statistics": {
+    "total_word_count": 76000,
+    "average_document_length": 9500,
+    "industry_distribution": {
+      "agriculture": 2,
+      "clean_energy": 1, 
+      "medical": 1,
+      "enabling_capabilities": 1,
+      "smec_ai_services": 3
+    },
+    "content_complexity": {
+      "low": 1,
+      "medium": 4,
+      "high": 3
+    },
+    "implementation_investment_ranges": {
+      "under_10k": 2,
+      "10k_to_100k": 4,
+      "over_100k": 2
+    }
+  },
+  "search_optimization": {
+    "primary_keywords": [
+      "SME AI adoption",
+      "Australian small business AI",
+      "artificial intelligence implementation", 
+      "SMEC AI services",
+      "AI consultation Australia",
+      "precision farming AI",
+      "smart grid optimization",
+      "medical AI diagnostics",
+      "manufacturing automation",
+      "AI training courses"
+    ],
+    "semantic_topics": [
+      "digital transformation",
+      "predictive analytics", 
+      "computer vision",
+      "machine learning applications",
+      "ROI analysis",
+      "implementation strategies",
+      "regulatory compliance",
+      "cost benefit analysis",
+      "success stories",
+      "funding opportunities"
+    ],
+    "industry_specific_terms": {
+      "agriculture": ["precision farming", "crop monitoring", "livestock management", "soil sensors", "yield prediction"],
+      "clean_energy": ["grid optimization", "renewable integration", "energy storage", "demand forecasting", "smart meters"],
+      "medical": ["diagnostic AI", "medical imaging", "pathology automation", "clinical decision support", "TGA compliance"],
+      "enabling_capabilities": ["predictive maintenance", "quality control", "process automation", "Industry 4.0", "IoT sensors"]
+    }
+  },
+  "quality_assurance": {
+    "content_review_date": "2025-06-27",
+    "technical_accuracy": "reviewed",
+    "australian_context": "validated",
+    "sme_relevance": "confirmed",
+    "regulatory_compliance": "current",
+    "pricing_accuracy": "approximate_2025"
+  },
+  "usage_guidelines": {
+    "chunking_strategy": "500_token_chunks_with_50_token_overlap",
+    "embedding_model": "text-embedding-3-small",
+    "vector_storage": "pinecone_with_industry_namespaces",
+    "retrieval_method": "semantic_search_with_industry_filtering",
+    "update_protocol": "quarterly_content_refresh"
+  }
+}

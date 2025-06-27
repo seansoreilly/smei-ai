@@ -11,7 +11,8 @@
       "Bash(task-master:*)",
       "Bash(psql:*)",
       "Bash(node:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(find:*)"
     ],
     "deny": []
   }
