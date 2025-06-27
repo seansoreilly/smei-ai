@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(task-master set-status:*)",
+      "Bash(npx create-next-app:*)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint)",
+      "Bash(task-master:*)",
+      "Bash(psql:*)",
+      "Bash(node:*)",
+      "Bash(rm:*)"
+    ],
+    "deny": []
+  }
+}
