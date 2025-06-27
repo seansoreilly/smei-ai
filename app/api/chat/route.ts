@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { db } from '@/lib/db';
 import OpenAI from 'openai';
 
@@ -6,14 +6,19 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+const SYSTEM_PROMPT = 'You are a helpful assistant. Provide concise, helpful responses.';
+
 export async function POST(request: NextRequest) {
   try {
     const { guid, message } = await request.json();
 
     if (!guid || !message) {
-      return NextResponse.json(
-        { error: 'GUID and message are required' },
-        { status: 400 }
+      return new Response(
+        JSON.stringify({ error: 'GUID and message are required' }),
+        { 
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        }
       );
     }
 
@@ -45,37 +50,72 @@ export async function POST(request: NextRequest) {
       ORDER BY created_at ASC
     `;
 
-    const messages = previousMessages.map((msg) => ({
-      role: msg.role as 'user' | 'assistant' | 'system',
-      content: msg.content as string,
-    }));
+    const messages = [
+      { role: 'system' as const, content: SYSTEM_PROMPT },
+      ...previousMessages.map((msg) => ({
+        role: msg.role as 'user' | 'assistant',
+        content: msg.content as string,
+      }))
+    ];
 
-    const completion = await openai.chat.completions.create({
+    const stream = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a helpful assistant. Provide concise, helpful responses.',
-        },
-        ...messages,
-      ],
+      messages,
       max_tokens: 1000,
       temperature: 0.7,
+      stream: true,
     });
 
-    const assistantResponse = completion.choices[0]?.message?.content || 'I apologize, but I could not generate a response.';
+    let fullResponse = '';
+    const encoder = new TextEncoder();
 
-    await db`
-      INSERT INTO messages (id, conversation_id, role, content, created_at)
-      VALUES (gen_random_uuid(), ${conversationId}, 'assistant', ${assistantResponse}, NOW())
-    `;
+    const readableStream = new ReadableStream({
+      async start(controller) {
+        const timeout = setTimeout(() => {
+          controller.error(new Error('Stream timeout'));
+        }, 30000);
 
-    return NextResponse.json({ response: assistantResponse });
+        try {
+          for await (const chunk of stream) {
+            const content = chunk.choices[0]?.delta?.content || '';
+            if (content) {
+              fullResponse += content;
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content })}\n\n`));
+            }
+          }
+
+          await db`
+            INSERT INTO messages (id, conversation_id, role, content, created_at)
+            VALUES (gen_random_uuid(), ${conversationId}, 'assistant', ${fullResponse}, NOW())
+          `;
+
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+          controller.close();
+        } catch (error) {
+          console.error('Streaming error:', error);
+          controller.error(error);
+        } finally {
+          clearTimeout(timeout);
+        }
+      },
+    });
+
+    return new Response(readableStream, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+      },
+    });
+
   } catch (error) {
     console.error('Error processing chat request:', error);
-    return NextResponse.json(
-      { error: 'Failed to process chat request' },
-      { status: 500 }
+    return new Response(
+      JSON.stringify({ error: 'Failed to process chat request' }),
+      { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
     );
   }
 }
