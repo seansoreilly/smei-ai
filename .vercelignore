@@ -1,0 +1,38 @@
+# Ignore version control directories and files
+.git
+.gitignore
+
+# Ignore dependency directories (they will be installed during the build)
+node_modules
+
+# Ignore build output directories
+.next
+dist
+out
+
+# Ignore IDE/editor settings
+.vscode
+.idea
+
+# Ignore Vercel local config directory
+.vercel
+
+# Ignore test, coverage, and documentation files
+coverage
+docs
+documentation
+__tests__
+**/*.test.*
+**/*.spec.*
+
+# Ignore environment variable files
+.env
+.env.*
+
+# Ignore miscellaneous OS or editor files
+.DS_Store
+*.swp
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log* 
