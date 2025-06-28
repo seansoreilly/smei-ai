@@ -35,4 +35,8 @@ __tests__
 *.log
 npm-debug.log*
 pnpm-debug.log*
-yarn-debug.log* 
+yarn-debug.log*
+
+# Ignore local data and development scripts directories
+data
+scripts 
