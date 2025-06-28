@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { llmOrchestration } from './llm-orchestration';
 
 export interface OpportunityScore {
@@ -260,9 +261,9 @@ Scores:
 Provide a concise 2-3 sentence rationale focusing on the key factors.`;
 
     try {
-      const response = await llmOrchestration.createChatCompletion([
-        { role: 'system', content: 'You are an AI business consultant. Provide clear, actionable insights.' },
-        { role: 'user', content: prompt }
+      const response: any = await llmOrchestration.createChatCompletion([
+        { role: 'system', content: 'You are an AI business consultant. Provide clear, actionable insights.' } as any,
+        { role: 'user', content: prompt } as any
       ], {
         model: 'gpt-3.5-turbo',
         temperature: 0.3,

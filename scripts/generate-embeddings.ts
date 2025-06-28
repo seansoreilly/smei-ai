@@ -230,13 +230,13 @@ class EmbeddingGenerator {
     const stats = await index.describeIndexStats();
     
     console.log('📊 Final index statistics:');
-    console.log(`  Total vectors: ${stats.totalVectorCount}`);
+    console.log(`  Total vectors: ${stats.totalRecordCount}`);
     console.log(`  Namespaces: ${Object.keys(stats.namespaces || {}).length}`);
     
     // Log namespace breakdown
     if (stats.namespaces) {
       for (const [namespace, namespaceStats] of Object.entries(stats.namespaces)) {
-        console.log(`    ${namespace}: ${namespaceStats.vectorCount} vectors`);
+        console.log(`    ${namespace}: ${namespaceStats.recordCount} vectors`);
       }
     }
 

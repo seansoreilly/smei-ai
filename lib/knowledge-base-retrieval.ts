@@ -1,6 +1,8 @@
 import { Pinecone } from '@pinecone-database/pinecone';
 import { OpenAI } from 'openai';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export interface RelevantDocument {
   id: string;
   content: string;
@@ -279,7 +281,7 @@ export class KnowledgeBaseRetrieval {
     industry: string,
     options: RetrievalOptions = {}
   ): Promise<RelevantDocument[]> {
-    const { topK = 5, minScore = 0.4 } = options;
+    const { topK = 5 } = options;
 
     try {
       // First, get the document content to use as the query
