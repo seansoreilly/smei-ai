@@ -12,7 +12,10 @@
       "Bash(psql:*)",
       "Bash(node:*)",
       "Bash(rm:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(npx tsx:*)",
+      "Bash(npx ts-node:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }
