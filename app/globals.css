@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Metropolis:wght@300&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Metropolis:wght@300&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -9,7 +9,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: 'Metropolis', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Metropolis", ui-sans-serif, system-ui, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,6 +22,20 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Metropolis', ui-sans-serif, system-ui, sans-serif;
+  font-family: "Metropolis", ui-sans-serif, system-ui, sans-serif;
   font-weight: 400;
+}
+
+/* Typing animation for loading dots */
+@keyframes typing-dot {
+  0%,
+  60%,
+  100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  30% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
 }

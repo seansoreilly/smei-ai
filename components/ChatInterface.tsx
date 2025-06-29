@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { MessageSquarePlus, Mail, Loader2 } from "lucide-react";
 import { Message } from "@/lib/db";
 import { MessageItem } from "./MessageItem";
@@ -120,16 +121,7 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
 
     const assistantMessageId = crypto.randomUUID();
     let assistantContent = "";
-
-    const assistantMessage: Message = {
-      id: assistantMessageId,
-      conversation_id: guid,
-      role: "assistant",
-      content: "",
-      created_at: new Date().toISOString(),
-    };
-
-    setMessages((prev) => [...prev, assistantMessage]);
+    let assistantMessageAdded = false;
 
     try {
       const response = await fetch("/api/chat", {
@@ -175,13 +167,28 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
               const parsed = JSON.parse(data);
               if (parsed.content) {
                 assistantContent += parsed.content;
-                setMessages((prev) =>
-                  prev.map((msg) =>
-                    msg.id === assistantMessageId
-                      ? { ...msg, content: assistantContent }
-                      : msg
-                  )
-                );
+
+                // Add the assistant message only when we first receive content
+                if (!assistantMessageAdded) {
+                  const assistantMessage: Message = {
+                    id: assistantMessageId,
+                    conversation_id: guid,
+                    role: "assistant",
+                    content: assistantContent,
+                    created_at: new Date().toISOString(),
+                  };
+                  setMessages((prev) => [...prev, assistantMessage]);
+                  assistantMessageAdded = true;
+                } else {
+                  // Update existing assistant message
+                  setMessages((prev) =>
+                    prev.map((msg) =>
+                      msg.id === assistantMessageId
+                        ? { ...msg, content: assistantContent }
+                        : msg
+                    )
+                  );
+                }
               }
             } catch {
               // Skip invalid JSON
@@ -191,16 +198,30 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
       }
     } catch (error) {
       console.error("Failed to send message:", error);
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === assistantMessageId
-            ? {
-                ...msg,
-                content: "Sorry, I encountered an error. Please try again.",
-              }
-            : msg
-        )
-      );
+
+      if (!assistantMessageAdded) {
+        // Add error message if no assistant message was added yet
+        const errorMessage: Message = {
+          id: assistantMessageId,
+          conversation_id: guid,
+          role: "assistant",
+          content: "Sorry, I encountered an error. Please try again.",
+          created_at: new Date().toISOString(),
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      } else {
+        // Update existing assistant message with error
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantMessageId
+              ? {
+                  ...msg,
+                  content: "Sorry, I encountered an error. Please try again.",
+                }
+              : msg
+          )
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -210,18 +231,21 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
     <div className="flex flex-col h-screen bg-gray-50">
       {/* Header with logo and action buttons */}
       <header className="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-3">
-        <div className="flex items-center justify-between">
-          {/* Logo section */}
+        <div className="flex items-center justify-center relative">
+          {/* Logo section - centered */}
           <div className="flex items-center gap-2">
-            <img
+            <Image
               src="/logo-h-b.png"
               alt="SMEC Logo"
-              className="w-100 h-30 object-contain"
+              width={400}
+              height={120}
+              className="object-contain"
+              priority
             />
           </div>
 
-          {/* Action buttons */}
-          <div className="flex items-center gap-3">
+          {/* Action buttons - positioned to the right */}
+          <div className="absolute right-0 flex items-center gap-3">
             <button
               onClick={handleNewChat}
               className="w-10 h-10 bg-white text-gray-700 border border-gray-300 rounded-full hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors flex items-center justify-center"
@@ -280,19 +304,31 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
               <div className="flex items-start gap-2 mb-4">
                 <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-gray-600 text-xs font-semibold">
-                    AI
+                    SMEC
                   </span>
                 </div>
                 <div className="bg-white rounded-2xl rounded-bl-md px-3 py-2 shadow-sm border border-gray-200 max-w-xs">
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div className="flex items-center space-x-1">
                     <div
-                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                      style={{ animationDelay: "0.1s" }}
+                      className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                      style={{
+                        animation: "typing-dot 1.4s infinite ease-in-out",
+                        animationDelay: "0s",
+                      }}
                     ></div>
                     <div
-                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                      style={{ animationDelay: "0.2s" }}
+                      className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                      style={{
+                        animation: "typing-dot 1.4s infinite ease-in-out",
+                        animationDelay: "0.2s",
+                      }}
+                    ></div>
+                    <div
+                      className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                      style={{
+                        animation: "typing-dot 1.4s infinite ease-in-out",
+                        animationDelay: "0.4s",
+                      }}
                     ></div>
                   </div>
                 </div>
