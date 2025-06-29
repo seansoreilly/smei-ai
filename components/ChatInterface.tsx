@@ -115,18 +115,25 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
     const fetchMessages = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`/api/messages/${guid}`);
+        // First check if conversation exists without creating it
+        const response = await fetch(`/api/conversation/${guid}`);
         if (response.ok) {
           const data = await response.json();
           setMessages(data.messages || []);
+        } else if (response.status === 404) {
+          // This is a new conversation - don't load any messages
+          setMessages([]);
         } else {
           console.warn(
             `Failed to fetch messages: ${response.status} ${response.statusText}`
           );
+          // For other errors, still start with empty messages
+          setMessages([]);
         }
       } catch (error) {
         console.error("Failed to fetch messages:", error);
-        // Don't throw - just log the error to prevent unhandled rejection
+        // Start with empty messages on error
+        setMessages([]);
       } finally {
         setIsLoading(false);
       }
