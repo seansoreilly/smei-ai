@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { MessageSquarePlus, Mail, Loader2 } from "lucide-react";
+import { MessageSquarePlus, Mail, Loader2, Copy, Check } from "lucide-react";
 import { Message } from "@/lib/db";
 import { MessageItem } from "./MessageItem";
 import { InputBox } from "./InputBox";
@@ -17,6 +17,7 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -77,6 +78,17 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
   const handleNewChat = () => {
     const newGuid = crypto.randomUUID();
     router.push(`/${newGuid}`);
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      const currentUrl = window.location.href;
+      await navigator.clipboard.writeText(currentUrl);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (error) {
+      console.error("Failed to copy link:", error);
+    }
   };
 
   const handleSendToSMEC = async () => {
@@ -313,6 +325,19 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
               title="New Chat - Start a new conversation"
             >
               <MessageSquarePlus className="w-5 h-5" />
+            </button>
+
+            <button
+              onClick={handleCopyLink}
+              className="w-10 h-10 bg-white text-gray-700 border border-gray-300 rounded-full hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors flex items-center justify-center"
+              aria-label="Copy chat link"
+              title="Copy this chat link"
+            >
+              {isCopied ? (
+                <Check className="w-5 h-5 text-green-600" />
+              ) : (
+                <Copy className="w-5 h-5" />
+              )}
             </button>
 
             <button
