@@ -142,9 +142,6 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
       <header className="flex-shrink-0 border-b border-smecai-light-gray dark:border-smecai-blue p-4">
         <div className="flex items-center gap-3">
           <img src="/logo-h-b.png" alt="SMEC AI" className="h-8 w-auto" />{/* eslint-disable-line @next/next/no-img-element */}
-          <h1 className="text-xl font-semibold text-smecai-black dark:text-smecai-white">
-            Chat
-          </h1>
         </div>
       </header>
       
