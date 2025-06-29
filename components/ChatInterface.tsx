@@ -285,16 +285,44 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
         aria-label="Chat messages"
       >
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center">
+          <div className="flex flex-col items-center justify-center h-full text-center max-w-2xl mx-auto px-6">
             <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-              <span className="text-blue-500 text-2xl">💬</span>
+              <span className="text-blue-500 text-2xl">🚀</span>
             </div>
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">
+            <h2 className="text-2xl font-semibold text-gray-700 mb-2">
               Welcome to SMEC AI
             </h2>
-            <p className="text-gray-500">
-              Send a message to start the conversation
+            <p className="text-gray-500 mb-8">
+              Your AI consulting partner for advanced technology solutions
             </p>
+            
+            <div className="w-full space-y-3">
+              <p className="text-sm text-gray-600 mb-4">Try asking about:</p>
+              <button
+                onClick={() => handleSendMessage("How can AI improve crop monitoring and precision farming?")}
+                className="w-full text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
+              >
+                <span className="text-gray-700">How can AI improve crop monitoring and precision farming?</span>
+              </button>
+              <button
+                onClick={() => handleSendMessage("What AI solutions are available for medical diagnostics?")}
+                className="w-full text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
+              >
+                <span className="text-gray-700">What AI solutions are available for medical diagnostics?</span>
+              </button>
+              <button
+                onClick={() => handleSendMessage("How can I implement smart manufacturing in my facility?")}
+                className="w-full text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
+              >
+                <span className="text-gray-700">How can I implement smart manufacturing in my facility?</span>
+              </button>
+              <button
+                onClick={() => handleSendMessage("What AI training programs does SMEC offer?")}
+                className="w-full text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
+              >
+                <span className="text-gray-700">What AI training programs does SMEC offer?</span>
+              </button>
+            </div>
           </div>
         ) : (
           <div className="py-4">

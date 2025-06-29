@@ -22,7 +22,7 @@ export function MessageItem({ message }: MessageItemProps) {
       <div
         className={`flex flex-col ${
           isUser ? "items-end" : "items-start"
-        } max-w-xs lg:max-w-md`}
+        } max-w-xs lg:max-w-md group`}
       >
         {/* Message bubble */}
         <div
@@ -85,9 +85,13 @@ export function MessageItem({ message }: MessageItemProps) {
           )}
         </div>
 
-        {/* Timestamp */}
-        <div className="text-xs text-gray-500 mt-1 px-1">
-          {new Date(message.created_at).toLocaleTimeString([], {
+        {/* Timestamp - only visible on group hover */}
+        <div className="text-xs text-gray-500 mt-1 px-1 cursor-default opacity-0 group-hover:opacity-100 transition-opacity">
+          {new Date(message.created_at).toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short', 
+            year: 'numeric'
+          })} {new Date(message.created_at).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           })}
