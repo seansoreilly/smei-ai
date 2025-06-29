@@ -32,20 +32,72 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
   // Global error handler for unhandled promise rejections
   useEffect(() => {
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      console.error("Unhandled promise rejection:", event.reason);
-      event.preventDefault(); // Prevent the default browser behavior
+      // Prevent the default browser behavior first
+      event.preventDefault();
 
-      // If it's an Event object, extract meaningful information
-      if (
-        event.reason &&
-        typeof event.reason === "object" &&
-        event.reason.constructor?.name === "Event"
-      ) {
-        console.error("Event details:", {
-          type: event.reason.type,
-          target: event.reason.target,
-          currentTarget: event.reason.currentTarget,
-        });
+      // Extract meaningful error information
+      let errorInfo: Record<string, unknown> = {};
+      let errorMessage = "Unknown error";
+
+      try {
+        if (event.reason) {
+          // Handle different types of rejection reasons
+          if (event.reason instanceof Error) {
+            errorMessage = event.reason.message;
+            errorInfo = {
+              name: event.reason.name,
+              message: event.reason.message,
+              stack: event.reason.stack,
+            };
+          } else if (typeof event.reason === "string") {
+            errorMessage = event.reason;
+            errorInfo = { message: event.reason };
+          } else if (event.reason && typeof event.reason === "object") {
+            // Check if it's an Event object
+            if ("type" in event.reason && "target" in event.reason) {
+              errorMessage = `Event: ${(event.reason as Event).type}`;
+              errorInfo = {
+                type: (event.reason as Event).type,
+                target:
+                  (event.reason as Event).target?.constructor?.name ||
+                  "Unknown",
+                timeStamp: (event.reason as Event).timeStamp,
+              };
+            } else {
+              // Generic object - extract useful properties
+              const keys = Object.keys(event.reason);
+              if (keys.length > 0) {
+                errorMessage = `Object with keys: ${keys.join(", ")}`;
+                errorInfo = { ...event.reason };
+              } else {
+                errorMessage = "Empty object rejection";
+                errorInfo = { type: "empty_object" };
+              }
+            }
+          }
+        } else {
+          errorMessage = "No rejection reason provided";
+          errorInfo = { type: "no_reason" };
+        }
+      } catch (processingError) {
+        errorMessage = "Error processing rejection";
+        errorInfo = {
+          type: "processing_error",
+          processingError:
+            processingError instanceof Error
+              ? processingError.message
+              : String(processingError),
+        };
+      }
+
+      // Log the structured error information
+      console.warn("Unhandled promise rejection:", errorMessage, errorInfo);
+
+      // In development, you might want to show a user-friendly message
+      if (process.env.NODE_ENV === "development") {
+        console.warn(
+          "If this error persists, please check the network connection and API endpoints."
+        );
       }
     };
 
@@ -62,17 +114,27 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch(`/api/messages/${guid}`);
         if (response.ok) {
           const data = await response.json();
           setMessages(data.messages || []);
+        } else {
+          console.warn(
+            `Failed to fetch messages: ${response.status} ${response.statusText}`
+          );
         }
       } catch (error) {
         console.error("Failed to fetch messages:", error);
+        // Don't throw - just log the error to prevent unhandled rejection
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchMessages();
+    fetchMessages().catch((error) => {
+      console.error("Unhandled error in fetchMessages:", error);
+    });
   }, [guid]);
 
   const handleNewChat = () => {
@@ -88,6 +150,9 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
       setTimeout(() => setIsCopied(false), 2000);
     } catch (error) {
       console.error("Failed to copy link:", error);
+      // Fallback: show the URL in an alert if clipboard fails
+      const currentUrl = window.location.href;
+      alert(`Please copy this link manually: ${currentUrl}`);
     }
   };
 
@@ -215,6 +280,12 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
         } catch (streamError) {
           // Handle stream reading errors (including network events)
           console.error("Stream reading error:", streamError);
+          // Close the reader to prevent resource leaks
+          try {
+            reader.cancel();
+          } catch (cancelError) {
+            console.warn("Failed to cancel reader:", cancelError);
+          }
           throw new Error("Connection interrupted while reading response");
         }
 
@@ -319,7 +390,9 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
           {/* Action buttons - positioned to the right */}
           <div className="absolute right-0 flex items-center gap-3">
             <button
-              onClick={handleNewChat}
+              onClick={() => {
+                handleNewChat();
+              }}
               className="w-10 h-10 bg-white text-gray-700 border border-gray-300 rounded-full hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors flex items-center justify-center"
               aria-label="New Chat"
               title="New Chat - Start a new conversation"
@@ -328,7 +401,11 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
             </button>
 
             <button
-              onClick={handleCopyLink}
+              onClick={() => {
+                handleCopyLink().catch((error) => {
+                  console.error("Unhandled error in handleCopyLink:", error);
+                });
+              }}
               className="w-10 h-10 bg-white text-gray-700 border border-gray-300 rounded-full hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors flex items-center justify-center"
               aria-label="Copy chat link"
               title="Copy this chat link"
@@ -341,7 +418,11 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
             </button>
 
             <button
-              onClick={handleSendToSMEC}
+              onClick={() => {
+                handleSendToSMEC().catch((error) => {
+                  console.error("Unhandled error in handleSendToSMEC:", error);
+                });
+              }}
               disabled={isSending || messages.length === 0}
               className="w-10 h-10 bg-blue-600 text-white rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
               aria-label="Send to SMEC"
@@ -380,11 +461,16 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
             <div className="w-full space-y-3">
               <p className="text-sm text-gray-600 mb-4">Try asking about:</p>
               <button
-                onClick={() =>
+                onClick={() => {
                   handleSendMessage(
                     "How can AI improve crop monitoring and precision farming?"
-                  )
-                }
+                  ).catch((error) => {
+                    console.error(
+                      "Unhandled error in handleSendMessage:",
+                      error
+                    );
+                  });
+                }}
                 className="w-full text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
               >
                 <span className="text-gray-700">
@@ -392,11 +478,16 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
                 </span>
               </button>
               <button
-                onClick={() =>
+                onClick={() => {
                   handleSendMessage(
                     "What AI solutions are available for medical diagnostics?"
-                  )
-                }
+                  ).catch((error) => {
+                    console.error(
+                      "Unhandled error in handleSendMessage:",
+                      error
+                    );
+                  });
+                }}
                 className="w-full text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
               >
                 <span className="text-gray-700">
@@ -404,11 +495,16 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
                 </span>
               </button>
               <button
-                onClick={() =>
+                onClick={() => {
                   handleSendMessage(
                     "How can I implement smart manufacturing in my facility?"
-                  )
-                }
+                  ).catch((error) => {
+                    console.error(
+                      "Unhandled error in handleSendMessage:",
+                      error
+                    );
+                  });
+                }}
                 className="w-full text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
               >
                 <span className="text-gray-700">
@@ -416,11 +512,16 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
                 </span>
               </button>
               <button
-                onClick={() =>
+                onClick={() => {
                   handleSendMessage(
                     "What AI training programs does SMEC offer?"
-                  )
-                }
+                  ).catch((error) => {
+                    console.error(
+                      "Unhandled error in handleSendMessage:",
+                      error
+                    );
+                  });
+                }}
                 className="w-full text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
               >
                 <span className="text-gray-700">
@@ -470,8 +571,18 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
       </div>
 
       {/* Input area */}
-      <div className="flex-shrink-0 bg-white/95 border-t border-gray-200 px-4 py-3">
-        <InputBox onSend={handleSendMessage} disabled={isLoading} />
+      <div className="flex-shrink-0 px-4 py-4 bg-white border-t border-gray-200">
+        <InputBox
+          onSend={(message) => {
+            handleSendMessage(message).catch((error) => {
+              console.error(
+                "Unhandled error in handleSendMessage from InputBox:",
+                error
+              );
+            });
+          }}
+          disabled={isLoading}
+        />
       </div>
     </div>
   );
