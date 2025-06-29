@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { MessageSquarePlus, Mail, Loader2 } from "lucide-react";
 import { Message } from "@/lib/db";
 import { MessageItem } from "./MessageItem";
 import { InputBox } from "./InputBox";
@@ -12,7 +14,9 @@ interface ChatInterfaceProps {
 export function ChatInterface({ guid }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -37,6 +41,68 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
 
     fetchMessages();
   }, [guid]);
+
+  const handleNewChat = () => {
+    const newGuid = crypto.randomUUID();
+    router.push(`/${newGuid}`);
+  };
+
+  const handleSendToSMEC = async () => {
+    if (messages.length === 0) {
+      alert("No conversation to send. Please start chatting first.");
+      return;
+    }
+
+    setIsSending(true);
+    try {
+      // First, try to export as PDF
+      const response = await fetch(`/api/export/pdf/${guid}`, {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = `smec-consultation-${guid.slice(0, 8)}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        alert(
+          "Conversation exported successfully! Please send the downloaded PDF to your SMEC representative."
+        );
+      } else {
+        // Fallback: create a simple text export
+        const conversationText = messages
+          .map((msg) => `${msg.role.toUpperCase()}: ${msg.content}`)
+          .join("\n\n");
+
+        const blob = new Blob([conversationText], { type: "text/plain" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = `smec-consultation-${guid.slice(0, 8)}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        alert(
+          "Conversation exported as text file! Please send this to your SMEC representative."
+        );
+      }
+    } catch (error) {
+      console.error("Failed to send to SMEC:", error);
+      alert("Failed to export conversation. Please try again.");
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   const handleSendMessage = async (content: string) => {
     if (!content.trim()) return;
@@ -142,18 +208,46 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
-      {/* Minimal header */}
+      {/* Header with logo and action buttons */}
       <header className="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-3">
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-between">
+          {/* Logo section */}
           <div className="flex items-center gap-2">
             <img
               src="/logo-h-b.png"
               alt="SMEC Logo"
               className="w-100 h-30 object-contain"
             />
-            {/* <h1 className="text-lg font-semibold text-gray-900">
-              pre-consultation
-            </h1> */}
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleNewChat}
+              className="w-10 h-10 bg-white text-gray-700 border border-gray-300 rounded-full hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors flex items-center justify-center"
+              aria-label="New Chat"
+              title="New Chat - Start a new conversation"
+            >
+              <MessageSquarePlus className="w-5 h-5" />
+            </button>
+
+            <button
+              onClick={handleSendToSMEC}
+              disabled={isSending || messages.length === 0}
+              className="w-10 h-10 bg-blue-600 text-white rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+              aria-label="Send to SMEC"
+              title={
+                messages.length === 0
+                  ? "Send to SMEC - Start a conversation to enable sharing"
+                  : "Send to SMEC - Export and share this conversation"
+              }
+            >
+              {isSending ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Mail className="w-5 h-5" />
+              )}
+            </button>
           </div>
         </div>
       </header>

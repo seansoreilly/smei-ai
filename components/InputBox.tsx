@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, KeyboardEvent } from "react";
+import { Send } from "lucide-react";
 
 interface InputBoxProps {
   onSend: (message: string) => void;
@@ -55,20 +56,11 @@ export function InputBox({ onSend, disabled = false }: InputBoxProps) {
         disabled={!message.trim() || disabled}
         className="w-10 h-10 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-500 transition-colors flex items-center justify-center flex-shrink-0"
         aria-label="Send message"
+        title={
+          !message.trim() ? "Type a message to send" : "Send message (Enter)"
+        }
       >
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-          />
-        </svg>
+        <Send className="w-5 h-5" />
       </button>
     </div>
   );
