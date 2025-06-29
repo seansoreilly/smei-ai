@@ -374,21 +374,26 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
     <div className="flex flex-col h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100">
       {/* Header with logo and action buttons */}
       <header className="flex-shrink-0 bg-white/95 border-b border-gray-200 px-4 py-3">
-        <div className="flex items-center justify-center relative">
+        <div className="flex items-center justify-between">
+          {/* Left spacer for balance */}
+          <div className="flex items-center gap-3 w-32">
+            {/* Empty space to balance the right side buttons */}
+          </div>
+
           {/* Logo section - centered */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <Image
               src="/logo-h-b.png"
               alt="SMEC Logo"
               width={400}
               height={120}
-              className="object-contain"
+              className="object-contain max-w-[300px] sm:max-w-[400px]"
               priority
             />
           </div>
 
           {/* Action buttons - positioned to the right */}
-          <div className="absolute right-0 flex items-center gap-3">
+          <div className="flex items-center gap-3 w-32 justify-end">
             <button
               onClick={() => {
                 handleNewChat();
