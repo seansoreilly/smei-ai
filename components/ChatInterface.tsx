@@ -7,6 +7,7 @@ import { MessageSquarePlus, Mail, Loader2 } from "lucide-react";
 import { Message } from "@/lib/db";
 import { MessageItem } from "./MessageItem";
 import { InputBox } from "./InputBox";
+import { Avatar } from "./Avatar";
 
 interface ChatInterfaceProps {
   guid: string;
@@ -302,11 +303,7 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
             ))}
             {isLoading && (
               <div className="flex items-start gap-2 mb-4">
-                <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-gray-600 text-xs font-semibold">
-                    SMEC
-                  </span>
-                </div>
+                <Avatar type="assistant" size="sm" />
                 <div className="bg-white rounded-2xl rounded-bl-md px-3 py-2 shadow-sm border border-gray-200 max-w-xs">
                   <div className="flex items-center space-x-1">
                     <div

@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import { Message } from "@/lib/db";
+import { Avatar } from "./Avatar";
 
 interface MessageItemProps {
   message: Message;
@@ -15,19 +16,7 @@ export function MessageItem({ message }: MessageItemProps) {
       }`}
     >
       {/* Avatar */}
-      <div
-        className={`w-11 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-          isUser ? "bg-blue-500" : "bg-gray-300"
-        }`}
-      >
-        <span
-          className={`text-xs font-semibold ${
-            isUser ? "text-white" : "text-gray-600"
-          }`}
-        >
-          {isUser ? "You" : "SMEC"}
-        </span>
-      </div>
+      <Avatar type={isUser ? "user" : "assistant"} size="md" />
 
       {/* Message content container */}
       <div
