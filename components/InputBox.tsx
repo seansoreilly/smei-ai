@@ -33,7 +33,7 @@ export function InputBox({ onSend, disabled = false }: InputBoxProps) {
         placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
         disabled={disabled}
         rows={1}
-        className="flex-1 resize-none rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex-1 resize-none rounded-lg border border-smecai-light-gray dark:border-smecai-blue bg-smecai-white dark:bg-smecai-dark-blue px-4 py-2 text-smecai-black dark:text-smecai-white placeholder-smecai-gray dark:placeholder-smecai-light-gray focus:border-smecai-light-blue focus:outline-none focus:ring-1 focus:ring-smecai-light-blue disabled:opacity-50 disabled:cursor-not-allowed"
         style={{
           minHeight: '44px',
           maxHeight: '120px',
@@ -50,7 +50,7 @@ export function InputBox({ onSend, disabled = false }: InputBoxProps) {
       <button
         onClick={handleSubmit}
         disabled={!message.trim() || disabled}
-        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-500 transition-colors"
+        className="px-4 py-2 bg-smecai-blue text-smecai-white rounded-lg hover:bg-smecai-dark-blue focus:outline-none focus:ring-2 focus:ring-smecai-blue focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-smecai-blue transition-colors"
         aria-label="Send message"
       >
         Send

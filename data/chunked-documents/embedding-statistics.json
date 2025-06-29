@@ -1,0 +1,67 @@
+{
+  "processing_summary": {
+    "total_chunks_processed": 44,
+    "total_vectors_uploaded": 44,
+    "upload_success_rate": "100.0%",
+    "processing_timestamp": "2025-06-27T13:49:00.481Z"
+  },
+  "industry_breakdown": {
+    "agriculture": {
+      "chunks_expected": 7,
+      "vectors_uploaded": 7,
+      "upload_success": "100.0%",
+      "avg_token_count": 465
+    },
+    "clean_energy": {
+      "chunks_expected": 5,
+      "vectors_uploaded": 0,
+      "upload_success": "0.0%",
+      "avg_token_count": 497
+    },
+    "medical": {
+      "chunks_expected": 5,
+      "vectors_uploaded": 5,
+      "upload_success": "100.0%",
+      "avg_token_count": 526
+    },
+    "enabling_capabilities": {
+      "chunks_expected": 6,
+      "vectors_uploaded": 0,
+      "upload_success": "0.0%",
+      "avg_token_count": 527
+    },
+    "all_industries": {
+      "chunks_expected": 21,
+      "vectors_uploaded": 0,
+      "upload_success": "0.0%",
+      "avg_token_count": 511
+    }
+  },
+  "pinecone_stats": {
+    "namespaces": {
+      "clean_energy": {
+        "recordCount": 5
+      },
+      "all_industries": {
+        "recordCount": 21
+      },
+      "agriculture": {
+        "recordCount": 7
+      },
+      "enabling_capabilities": {
+        "recordCount": 6
+      },
+      "medical": {
+        "recordCount": 5
+      }
+    },
+    "dimension": 1536,
+    "indexFullness": 0,
+    "totalRecordCount": 44
+  },
+  "quality_metrics": {
+    "all_chunks_uploaded": true,
+    "namespaces_created": 5,
+    "expected_namespaces": 5
+  }
+}

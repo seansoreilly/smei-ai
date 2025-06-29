@@ -1,0 +1,50 @@
+{
+  "total_queries": 19,
+  "avg_latency_ms": 1279.578947368421,
+  "avg_precision_at_3": 0.9824561403508772,
+  "avg_precision_at_5": 0.9368421052631579,
+  "avg_topic_coverage": 0.9078947368421053,
+  "pass_rate": 0.3157894736842105,
+  "performance_grade": "F",
+  "industry_breakdown": {
+    "agriculture": {
+      "query_count": 5,
+      "pass_rate": 0.2,
+      "avg_latency": 1752.6,
+      "avg_precision_3": 0.9333333333333333,
+      "avg_topic_coverage": 0.95
+    },
+    "clean_energy": {
+      "query_count": 4,
+      "pass_rate": 0.25,
+      "avg_latency": 1046,
+      "avg_precision_3": 1,
+      "avg_topic_coverage": 1
+    },
+    "medical": {
+      "query_count": 4,
+      "pass_rate": 0.5,
+      "avg_latency": 976,
+      "avg_precision_3": 1,
+      "avg_topic_coverage": 0.75
+    },
+    "enabling_capabilities": {
+      "query_count": 3,
+      "pass_rate": 0.3333333333333333,
+      "avg_latency": 1142,
+      "avg_precision_3": 1,
+      "avg_topic_coverage": 0.9166666666666666
+    },
+    "all_industries": {
+      "query_count": 3,
+      "pass_rate": 0.3333333333333333,
+      "avg_latency": 1345,
+      "avg_precision_3": 1,
+      "avg_topic_coverage": 0.9166666666666666
+    }
+  },
+  "recommendations": [
+    "Consider caching frequent queries or optimizing embedding generation",
+    "Review failed queries and adjust retrieval parameters"
+  ]
+}

@@ -1,0 +1,93 @@
+<svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icon/Symbol part -->
+  <g>
+    <!-- Outer house frame -->
+    <path d="M5 50 L5 180 L150 180 L150 50 L77.5 5 Z" 
+          fill="none" 
+          stroke="url(#purpleGradient)" 
+          stroke-width="12" 
+          stroke-linejoin="round" 
+          stroke-linecap="round"/>
+    
+    <!-- Inner vertical line -->
+    <line x1="77.5" y1="5" x2="77.5" y2="180" 
+          stroke="url(#purpleGradient)" 
+          stroke-width="12" 
+          stroke-linecap="round"/>
+    
+    <!-- Top circle -->
+    <circle cx="77.5" cy="35" r="18" 
+            fill="none" 
+            stroke="url(#purpleGradient)" 
+            stroke-width="12"/>
+    <circle cx="77.5" cy="35" r="6" 
+            fill="url(#purpleGradient)"/>
+    
+    <!-- Bottom circle -->
+    <circle cx="77.5" cy="105" r="18" 
+            fill="none" 
+            stroke="url(#purpleGradient)" 
+            stroke-width="12"/>
+    <circle cx="77.5" cy="105" r="6" 
+            fill="url(#purpleGradient)"/>
+    
+    <!-- Bottom horizontal line -->
+    <line x1="5" y1="180" x2="260" y2="180" 
+          stroke="url(#purpleGradient)" 
+          stroke-width="12" 
+          stroke-linecap="round"/>
+  </g>
+
+  <!-- Text part -->
+  <g transform="translate(280, 50)">
+    <!-- S -->
+    <path d="M0 40 Q0 0 40 0 Q80 0 80 30 Q80 50 40 50 Q80 50 80 80 Q80 120 40 120 Q0 120 0 80" 
+          fill="#2C3E50" 
+          stroke="#2C3E50" 
+          stroke-width="2"/>
+    
+    <!-- M -->
+    <path d="M100 120 L100 0 L140 80 L180 0 L180 120 M100 0 L140 0 M180 0 L180 0" 
+          fill="none" 
+          stroke="#2C3E50" 
+          stroke-width="16" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+    <rect x="100" y="0" width="16" height="120" fill="#2C3E50"/>
+    <rect x="164" y="0" width="16" height="120" fill="#2C3E50"/>
+    <polygon points="116,0 140,60 164,0 140,0" fill="#2C3E50"/>
+    
+    <!-- E -->
+    <rect x="200" y="0" width="16" height="120" fill="#2C3E50"/>
+    <rect x="200" y="0" width="60" height="16" fill="#2C3E50"/>
+    <rect x="200" y="52" width="50" height="16" fill="#2C3E50"/>
+    <rect x="200" y="104" width="60" height="16" fill="#2C3E50"/>
+    
+    <!-- C -->
+    <path d="M300 60 Q280 0 340 0 Q380 0 380 30 M280 60 Q280 120 340 120 Q380 120 380 90" 
+          fill="none" 
+          stroke="#2C3E50" 
+          stroke-width="16" 
+          stroke-linecap="round"/>
+    <path d="M280 60 Q280 0 340 0 M280 60 Q280 120 340 120" 
+          fill="none" 
+          stroke="#2C3E50" 
+          stroke-width="16" 
+          stroke-linecap="round"/>
+    
+    <!-- A -->
+    <polygon points="450,120 430,120 440,0 470,0 480,120 460,120 445,80 465,80" fill="#2C3E50"/>
+    <rect x="445" y="70" width="20" height="10" fill="white"/>
+    
+    <!-- I -->
+    <rect x="500" y="0" width="16" height="120" fill="#2C3E50"/>
+  </g>
+
+  <!-- Gradient definitions -->
+  <defs>
+    <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6D28D9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg>

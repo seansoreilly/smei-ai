@@ -17,8 +17,8 @@ export function MessageItem({ message }: MessageItemProps) {
       <div
         className={`max-w-[80%] rounded-lg p-3 ${
           isUser
-            ? 'bg-blue-500 text-white ml-4'
-            : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white mr-4'
+            ? 'bg-smecai-blue text-smecai-white ml-4'
+            : 'bg-smecai-light-gray dark:bg-smecai-blue text-smecai-black dark:text-smecai-white mr-4'
         }`}
       >
         {isUser ? (
@@ -30,7 +30,7 @@ export function MessageItem({ message }: MessageItemProps) {
         )}
         <div 
           className={`text-xs mt-2 opacity-70 ${
-            isUser ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'
+            isUser ? 'text-smecai-light-gray' : 'text-smecai-gray dark:text-smecai-light-gray'
           }`}
         >
           {new Date(message.created_at).toLocaleTimeString([], { 

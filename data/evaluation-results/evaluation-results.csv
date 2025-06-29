@@ -1,0 +1,20 @@
+query_id,industry,query,results_count,top_score,avg_score,latency_ms,precision_at_3,precision_at_5,topic_coverage,hallucination_risk,passed
+agri_001,agriculture,"How can AI help with crop monitoring?",5,0.754846692,0.6157472846,4642,1,1,1,0.3,false
+agri_002,agriculture,"What are the costs of implementing precision farming?",5,0.611297369,0.5615186333999999,1098,1,1,1,0.3,false
+agri_003,agriculture,"AI solutions for livestock management",5,0.593624473,0.5623604423999999,1056,1,0.6,1,0.3,false
+energy_001,clean_energy,"Smart grid optimization with AI",5,0.718053222,0.5993132354,1002,1,1,1,0.3,false
+energy_002,clean_energy,"Solar power prediction models for small energy companies",5,0.554249644,0.48649490479999996,1017,1,1,1,0.5,false
+energy_003,clean_energy,"Energy trading algorithms for wind farm operators",5,0.619796276,0.5008256972,979,1,1,1,0.3,true
+medical_001,medical,"AI diagnostic systems for small medical practices",5,0.64677,0.550149381,892,1,1,0.75,0.3,true
+medical_002,medical,"TGA regulatory requirements for medical AI",5,0.596234143,0.5494678547999999,1091,1,0.8,1,0.3,false
+medical_003,medical,"Implementing telehealth AI solutions in rural clinics",5,0.607580304,0.5807898236,913,1,1,0.75,0.3,true
+mfg_001,enabling_capabilities,"Predictive maintenance with AI for manufacturing",5,0.654064536,0.5887188435999999,819,1,1,0.75,0.3,true
+mfg_002,enabling_capabilities,"Computer vision quality control in production lines",5,0.474722028,0.42157812119999993,1109,1,1,1,0.5,false
+mfg_003,enabling_capabilities,"Industry 4.0 transformation for small manufacturers",5,0.558823764,0.5153849066,1498,1,1,1,0.3,false
+smec_001,all_industries,"SMEC AI consultation services for small businesses",5,0.791795671,0.7047713692,1362,1,1,0.75,0.1,false
+smec_002,all_industries,"AI Studio 8-week intensive program details",5,0.591634572,0.4882484496,911,1,1,1,0.5,true
+smec_003,all_industries,"Training courses for AI implementation in SMEs",5,0.674962759,0.6210894584,1762,1,1,1,0.3,false
+cross_001,agriculture,"Government funding for AI adoption in Australian businesses",5,0.612804,0.5590951334,962,1,1,0.75,0.3,true
+cross_002,medical,"Data privacy and security for AI systems",5,0.469391674,0.4403664172,1008,1,0.8,0.5,0.5,false
+edge_001,agriculture,"Blockchain integration with AI for food traceability",5,0.469272703,0.44129116679999997,1005,0.6666666666666666,0.6,1,0.5,false
+edge_002,clean_energy,"Quantum computing applications in energy optimization",5,0.481116116,0.449880433,1186,1,1,1,0.5,false

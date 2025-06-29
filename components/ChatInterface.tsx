@@ -138,11 +138,14 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-gray-900">
-      <header className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700 p-4">
-        <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
-          Chat
-        </h1>
+    <div className="flex flex-col h-screen bg-smecai-white dark:bg-smecai-dark-blue">
+      <header className="flex-shrink-0 border-b border-smecai-light-gray dark:border-smecai-blue p-4">
+        <div className="flex items-center gap-3">
+          <img src="/logo-h-b.png" alt="SMEC AI" className="h-8 w-auto" />{/* eslint-disable-line @next/next/no-img-element */}
+          <h1 className="text-xl font-semibold text-smecai-black dark:text-smecai-white">
+            Chat
+          </h1>
+        </div>
       </header>
       
       <div 
@@ -152,7 +155,7 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
         aria-label="Chat messages"
       >
         {messages.length === 0 ? (
-          <div className="text-center text-gray-500 dark:text-gray-400 mt-8">
+          <div className="text-center text-smecai-gray dark:text-smecai-light-gray mt-8">
             <p>Start a conversation!</p>
           </div>
         ) : (
@@ -162,11 +165,11 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
         )}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-3">
+            <div className="bg-smecai-light-gray dark:bg-smecai-blue rounded-lg p-3">
               <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                <div className="w-2 h-2 bg-smecai-gray rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-smecai-gray rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-2 h-2 bg-smecai-gray rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
               </div>
             </div>
           </div>
@@ -174,7 +177,7 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
         <div ref={messagesEndRef} />
       </div>
       
-      <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 p-4">
+      <div className="flex-shrink-0 border-t border-smecai-light-gray dark:border-smecai-blue p-4">
         <InputBox onSend={handleSendMessage} disabled={isLoading} />
       </div>
     </div>

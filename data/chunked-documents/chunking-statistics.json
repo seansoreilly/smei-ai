@@ -1,0 +1,60 @@
+{
+  "total_chunks": 44,
+  "total_documents": 8,
+  "token_statistics": {
+    "min": 300,
+    "max": 627,
+    "mean": 506,
+    "median": 529,
+    "chunks_in_target_range": 8,
+    "percentage_in_target": 18
+  },
+  "industry_breakdown": {
+    "agriculture": {
+      "chunk_count": 7,
+      "avg_token_count": 465,
+      "min_tokens": 312,
+      "max_tokens": 595
+    },
+    "clean_energy": {
+      "chunk_count": 5,
+      "avg_token_count": 497,
+      "min_tokens": 364,
+      "max_tokens": 626
+    },
+    "medical": {
+      "chunk_count": 5,
+      "avg_token_count": 526,
+      "min_tokens": 413,
+      "max_tokens": 572
+    },
+    "enabling_capabilities": {
+      "chunk_count": 6,
+      "avg_token_count": 527,
+      "min_tokens": 473,
+      "max_tokens": 561
+    },
+    "all_industries": {
+      "chunk_count": 21,
+      "avg_token_count": 511,
+      "min_tokens": 300,
+      "max_tokens": 627
+    }
+  },
+  "documents_processed": [
+    "agriculture_precision-farming-guide",
+    "agriculture_crop-monitoring-ai",
+    "clean-energy_smart-grid-optimization",
+    "medical_diagnostic-ai-systems",
+    "enabling-capabilities_manufacturing-automation",
+    "smec-ai-services_consultation-services",
+    "smec-ai-services_ai-studio-program",
+    "smec-ai-services_short-courses"
+  ],
+  "quality_metrics": {
+    "all_docs_chunked": true,
+    "no_oversized_chunks": false,
+    "avg_tokens_in_range": true
+  },
+  "chunking_timestamp": "2025-06-27T13:34:52.897Z"
+}

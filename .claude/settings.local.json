@@ -15,7 +15,13 @@
       "Bash(find:*)",
       "Bash(npx tsx:*)",
       "Bash(npx ts-node:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "WebFetch(domain:smecai.au)"
     ],
     "deny": []
   }
