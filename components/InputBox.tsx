@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, KeyboardEvent } from 'react';
+import { useState, KeyboardEvent } from "react";
 
 interface InputBoxProps {
   onSend: (message: string) => void;
@@ -8,52 +8,67 @@ interface InputBoxProps {
 }
 
 export function InputBox({ onSend, disabled = false }: InputBoxProps) {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const handleSubmit = () => {
     if (message.trim() && !disabled) {
       onSend(message);
-      setMessage('');
+      setMessage("");
     }
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
     }
   };
 
   return (
-    <div className="flex gap-2">
-      <textarea
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
-        disabled={disabled}
-        rows={1}
-        className="flex-1 resize-none rounded-lg border border-smecai-light-gray dark:border-smecai-blue bg-smecai-white dark:bg-smecai-dark-blue px-4 py-2 text-smecai-black dark:text-smecai-white placeholder-smecai-gray dark:placeholder-smecai-light-gray focus:border-smecai-light-blue focus:outline-none focus:ring-1 focus:ring-smecai-light-blue disabled:opacity-50 disabled:cursor-not-allowed"
-        style={{
-          minHeight: '44px',
-          maxHeight: '120px',
-        }}
-        onInput={(e) => {
-          const target = e.target as HTMLTextAreaElement;
-          target.style.height = 'auto';
-          target.style.height = `${Math.min(target.scrollHeight, 120)}px`;
-        }}
-        aria-label="Message input"
-        role="textbox"
-        aria-multiline="true"
-      />
+    <div className="flex items-center gap-2">
+      <div className="flex-1 relative">
+        <textarea
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Type a message..."
+          disabled={disabled}
+          rows={1}
+          className="w-full resize-none rounded-3xl border border-gray-300 bg-gray-100 px-4 py-3 pr-12 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          style={{
+            minHeight: "44px",
+            maxHeight: "120px",
+          }}
+          onInput={(e) => {
+            const target = e.target as HTMLTextAreaElement;
+            target.style.height = "auto";
+            target.style.height = `${Math.min(target.scrollHeight, 120)}px`;
+          }}
+          aria-label="Message input"
+          role="textbox"
+          aria-multiline="true"
+        />
+      </div>
+
       <button
         onClick={handleSubmit}
         disabled={!message.trim() || disabled}
-        className="px-4 py-2 bg-smecai-blue text-smecai-white rounded-lg hover:bg-smecai-dark-blue focus:outline-none focus:ring-2 focus:ring-smecai-blue focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-smecai-blue transition-colors"
+        className="w-10 h-10 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-500 transition-colors flex items-center justify-center flex-shrink-0"
         aria-label="Send message"
       >
-        Send
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+          />
+        </svg>
       </button>
     </div>
   );

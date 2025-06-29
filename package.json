@@ -12,6 +12,7 @@
     "@langchain/textsplitters": "^0.1.0",
     "@neondatabase/serverless": "^1.0.1",
     "@pinecone-database/pinecone": "^6.1.1",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/pdfkit": "^0.14.0",
     "@types/uuid": "^10.0.0",
     "dotenv": "^16.6.0",
