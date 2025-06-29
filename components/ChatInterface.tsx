@@ -303,7 +303,7 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
             ))}
             {isLoading && (
               <div className="flex items-start gap-2 mb-4">
-                <Avatar type="assistant" size="sm" />
+                <Avatar type="assistant" size="md" />
                 <div className="bg-white rounded-2xl rounded-bl-md px-3 py-2 shadow-sm border border-gray-200 max-w-xs">
                   <div className="flex items-center space-x-1">
                     <div
