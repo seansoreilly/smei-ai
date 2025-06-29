@@ -229,9 +229,9 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100">
       {/* Header with logo and action buttons */}
-      <header className="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-3">
+      <header className="flex-shrink-0 bg-white/95 border-b border-gray-200 px-4 py-3">
         <div className="flex items-center justify-center relative">
           {/* Logo section - centered */}
           <div className="flex items-center gap-2">
@@ -337,7 +337,7 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
       </div>
 
       {/* Input area */}
-      <div className="flex-shrink-0 bg-white border-t border-gray-200 px-4 py-3">
+      <div className="flex-shrink-0 bg-white/95 border-t border-gray-200 px-4 py-3">
         <InputBox onSend={handleSendMessage} disabled={isLoading} />
       </div>
     </div>
