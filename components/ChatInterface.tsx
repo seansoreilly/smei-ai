@@ -28,6 +28,36 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
     scrollToBottom();
   }, [messages]);
 
+  // Global error handler for unhandled promise rejections
+  useEffect(() => {
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      console.error("Unhandled promise rejection:", event.reason);
+      event.preventDefault(); // Prevent the default browser behavior
+
+      // If it's an Event object, extract meaningful information
+      if (
+        event.reason &&
+        typeof event.reason === "object" &&
+        event.reason.constructor?.name === "Event"
+      ) {
+        console.error("Event details:", {
+          type: event.reason.type,
+          target: event.reason.target,
+          currentTarget: event.reason.currentTarget,
+        });
+      }
+    };
+
+    window.addEventListener("unhandledrejection", handleUnhandledRejection);
+
+    return () => {
+      window.removeEventListener(
+        "unhandledrejection",
+        handleUnhandledRejection
+      );
+    };
+  }, []);
+
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -60,10 +90,18 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
       // First, try to export as PDF
       const response = await fetch(`/api/export/pdf/${guid}`, {
         method: "POST",
+      }).catch((fetchError) => {
+        // Handle network errors
+        console.error("Network error during PDF export:", fetchError);
+        throw new Error("Network connection failed during PDF export");
       });
 
       if (response.ok) {
-        const blob = await response.blob();
+        const blob = await response.blob().catch((blobError) => {
+          console.error("Failed to get blob from response:", blobError);
+          throw new Error("Failed to process PDF response");
+        });
+
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.style.display = "none";
@@ -100,7 +138,11 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
       }
     } catch (error) {
       console.error("Failed to send to SMEC:", error);
-      alert("Failed to export conversation. Please try again.");
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
+      alert(
+        `Failed to export conversation: ${errorMessage}. Please try again.`
+      );
     } finally {
       setIsSending(false);
     }
@@ -134,10 +176,17 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
           guid,
           message: content.trim(),
         }),
+      }).catch((fetchError) => {
+        // Handle network errors, CORS issues, etc.
+        console.error("Network error during fetch:", fetchError);
+        throw new Error(
+          "Network connection failed. Please check your internet connection and try again."
+        );
       });
 
       if (!response.ok) {
-        throw new Error("Failed to send message");
+        const errorText = await response.text().catch(() => "Unknown error");
+        throw new Error(`Server error (${response.status}): ${errorText}`);
       }
 
       const reader = response.body?.getReader();
@@ -148,7 +197,16 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
       }
 
       while (true) {
-        const { done, value } = await reader.read();
+        let result;
+        try {
+          result = await reader.read();
+        } catch (streamError) {
+          // Handle stream reading errors (including network events)
+          console.error("Stream reading error:", streamError);
+          throw new Error("Connection interrupted while reading response");
+        }
+
+        const { done, value } = result;
 
         if (done) break;
 
@@ -191,8 +249,9 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
                   );
                 }
               }
-            } catch {
-              // Skip invalid JSON
+            } catch (parseError) {
+              // Skip invalid JSON - log for debugging
+              console.warn("Failed to parse JSON chunk:", data, parseError);
             }
           }
         }
@@ -286,41 +345,62 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
       >
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center max-w-2xl mx-auto px-6">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-              <span className="text-blue-500 text-2xl">🚀</span>
-            </div>
             <h2 className="text-2xl font-semibold text-gray-700 mb-2">
               Welcome to SMEC AI
             </h2>
             <p className="text-gray-500 mb-8">
               Your AI consulting partner for advanced technology solutions
             </p>
-            
+
             <div className="w-full space-y-3">
               <p className="text-sm text-gray-600 mb-4">Try asking about:</p>
               <button
-                onClick={() => handleSendMessage("How can AI improve crop monitoring and precision farming?")}
+                onClick={() =>
+                  handleSendMessage(
+                    "How can AI improve crop monitoring and precision farming?"
+                  )
+                }
                 className="w-full text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
               >
-                <span className="text-gray-700">How can AI improve crop monitoring and precision farming?</span>
+                <span className="text-gray-700">
+                  How can AI improve crop monitoring and precision farming?
+                </span>
               </button>
               <button
-                onClick={() => handleSendMessage("What AI solutions are available for medical diagnostics?")}
+                onClick={() =>
+                  handleSendMessage(
+                    "What AI solutions are available for medical diagnostics?"
+                  )
+                }
                 className="w-full text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
               >
-                <span className="text-gray-700">What AI solutions are available for medical diagnostics?</span>
+                <span className="text-gray-700">
+                  What AI solutions are available for medical diagnostics?
+                </span>
               </button>
               <button
-                onClick={() => handleSendMessage("How can I implement smart manufacturing in my facility?")}
+                onClick={() =>
+                  handleSendMessage(
+                    "How can I implement smart manufacturing in my facility?"
+                  )
+                }
                 className="w-full text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
               >
-                <span className="text-gray-700">How can I implement smart manufacturing in my facility?</span>
+                <span className="text-gray-700">
+                  How can I implement smart manufacturing in my facility?
+                </span>
               </button>
               <button
-                onClick={() => handleSendMessage("What AI training programs does SMEC offer?")}
+                onClick={() =>
+                  handleSendMessage(
+                    "What AI training programs does SMEC offer?"
+                  )
+                }
                 className="w-full text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
               >
-                <span className="text-gray-700">What AI training programs does SMEC offer?</span>
+                <span className="text-gray-700">
+                  What AI training programs does SMEC offer?
+                </span>
               </button>
             </div>
           </div>

@@ -22,7 +22,8 @@
       "Bash(grep:*)",
       "Bash(ls:*)",
       "WebFetch(domain:smecai.au)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(rg:*)"
     ],
     "deny": []
   }

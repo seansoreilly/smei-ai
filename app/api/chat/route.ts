@@ -60,13 +60,22 @@ export async function POST(request: NextRequest) {
       conversationMessages
     );
 
-    const stream = await llmOrchestration.createChatCompletion(processedMessages, {
-      model: 'gpt-3.5-turbo',
-      max_tokens: 1000,
-      temperature: 0.7,
-      stream: true,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }) as unknown as AsyncIterable<any>;
+    let stream;
+    try {
+      stream = await llmOrchestration.createChatCompletion(processedMessages, {
+        model: 'gpt-3.5-turbo',
+        max_tokens: 1000,
+        temperature: 0.7,
+        stream: true,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      }) as unknown as AsyncIterable<any>;
+    } catch (error) {
+      console.error('Failed to create chat completion:', error);
+      return new Response(
+        JSON.stringify({ error: 'Failed to initialize chat stream' }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     let fullResponse = '';
     const encoder = new TextEncoder();
@@ -86,10 +95,15 @@ export async function POST(request: NextRequest) {
             }
           }
 
-          await db`
-            INSERT INTO messages (id, conversation_id, role, content, created_at)
-            VALUES (gen_random_uuid(), ${conversationId}, 'assistant', ${fullResponse}, NOW())
-          `;
+          try {
+            await db`
+              INSERT INTO messages (id, conversation_id, role, content, created_at)
+              VALUES (gen_random_uuid(), ${conversationId}, 'assistant', ${fullResponse}, NOW())
+            `;
+          } catch (dbError) {
+            console.error('Failed to save assistant message:', dbError);
+            // Continue execution - don't fail the stream for DB issues
+          }
 
           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ 
             content: '', 
