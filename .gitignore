@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.env*.local
 
 # vercel
 .vercel
@@ -40,7 +41,70 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# IDE and editor settings
 .cursor/
 .taskmaster/
+.vscode/
+.idea/
+*.swp
+*.swo
 
-.env*.local
+# AI/ML specific files
+# Vector embeddings (large files, regenerated from source)
+data/embeddings/
+data/vectors/
+*.embeddings
+*.vectors
+
+# Temporary processing files
+data/temp/
+data/tmp/
+*.processing
+*.chunking
+
+# Large evaluation datasets (keep summary files, ignore detailed data)
+data/evaluation-results/detailed-*
+data/evaluation-results/raw-*
+!data/evaluation-results/benchmark-summary.json
+!data/evaluation-results/final-performance-report.md
+
+# Generated document chunks (can be regenerated)
+data/chunked-documents/*.jsonl
+data/chunked-documents/document-chunks.json
+!data/chunked-documents/chunking-statistics.json
+!data/chunked-documents/embedding-statistics.json
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# AI model cache and temporary files
+.cache/
+cache/
+*.cache
+model-cache/
+
+# API keys and sensitive config (additional protection)
+secrets.json
+config.local.json
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/

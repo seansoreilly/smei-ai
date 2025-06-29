@@ -5,7 +5,7 @@
 # Ignore dependency directories (they will be installed during the build)
 node_modules
 
-# Ignore build output directories
+# Ignore build output directories (Next.js will build fresh)
 .next
 dist
 out
@@ -13,6 +13,8 @@ out
 # Ignore IDE/editor settings
 .vscode
 .idea
+.cursor
+.taskmaster
 
 # Ignore Vercel local config directory
 .vercel
@@ -25,7 +27,7 @@ __tests__
 **/*.test.*
 **/*.spec.*
 
-# Ignore environment variable files
+# Ignore environment variable files (use environment variables in Vercel dashboard)
 .env
 .env.*
 
@@ -37,6 +39,39 @@ npm-debug.log*
 pnpm-debug.log*
 yarn-debug.log*
 
-# Ignore local data and development scripts directories
-data
-scripts 
+# Ignore development and debugging scripts
+scripts/
+debug-query.js
+test-*.js
+check-guid.js
+
+# Ignore large generated data files (keep only essential knowledge base)
+data/chunked-documents/
+data/evaluation-results/
+data/temp/
+data/tmp/
+
+# Keep essential data files for the application
+!data/knowledge-base/
+!data/products.yaml
+!data/metadata.json
+
+# Ignore AI/ML cache and processing files
+*.embeddings
+*.vectors
+*.cache
+model-cache/
+.cache/
+
+# Ignore backup and temporary files
+*.bak
+*.backup
+*.orig
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Ignore large log files
+*.log
+logs/ 
