@@ -8,7 +8,7 @@ export function Avatar({ type, size = "md" }: AvatarProps) {
 
   const sizeClasses = {
     sm: "w-8 h-8",
-    md: "w-10 h-8",
+    md: "w-10 h-10",
   };
 
   return (
