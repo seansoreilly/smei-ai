@@ -23,7 +23,10 @@
       "Bash(ls:*)",
       "WebFetch(domain:smecai.au)",
       "Bash(npx tsc:*)",
-      "Bash(rg:*)"
+      "Bash(rg:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(mv:*)",
+      "Bash(npx next:*)"
     ],
     "deny": []
   }
