@@ -1,69 +1,117 @@
-# Ignore version control directories and files
+# Version Control
 .git
 .gitignore
+.gitattributes
 
-# Ignore dependency directories (they will be installed during the build)
+# Dependencies (will be installed during build)
 node_modules
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
-# Ignore build output directories (Next.js will build fresh)
+# Build directories (Next.js will build fresh)
 .next
-dist
-out
+/out
+/build
+/dist
 
-# Ignore IDE/editor settings
+# IDE and Editor Settings
 .vscode
 .idea
 .cursor
 .taskmaster
+*.sublime-*
+*.code-workspace
 
-# Ignore Vercel local config directory
+# Vercel
 .vercel
 
-# Ignore test, coverage, and documentation files
-coverage
-docs
-documentation
-__tests__
-**/*.test.*
-**/*.spec.*
-
-# Ignore environment variable files (use environment variables in Vercel dashboard)
+# Environment files (use Vercel environment variables instead)
 .env
 .env.*
+!.env.example
 
-# Ignore miscellaneous OS or editor files
+# OS and Editor Files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
 *.swp
+*.swo
+*~
+
+# Logs and debugging
 *.log
 npm-debug.log*
 pnpm-debug.log*
 yarn-debug.log*
+logs/
+log/
 
-# Ignore development and debugging scripts
+# Test files and coverage
+coverage/
+*.lcov
+__tests__/
+**/*.test.*
+**/*.spec.*
+*.coverage
+.nyc_output
+
+# Development and debugging scripts
 scripts/
 debug-query.js
 test-*.js
+test-*.ts
 check-guid.js
 
-# Ignore large generated data files (keep only essential knowledge base)
+# Documentation (not needed for runtime)
+docs/
+documentation/
+*.md
+!README.md
+
+# AI/ML generated and temporary files
 data/chunked-documents/
 data/evaluation-results/
 data/temp/
 data/tmp/
+data/embeddings/
+data/vectors/
+*.embeddings
+*.vectors
+*.pkl
+*.pickle
+*.processing
+*.chunking
+processing/
 
-# Keep essential data files for the application
+# Essential data files to KEEP for the application
 !data/knowledge-base/
 !data/products.yaml
 !data/metadata.json
 
-# Ignore AI/ML cache and processing files
-*.embeddings
-*.vectors
+# AI model cache and temporary files
 *.cache
 model-cache/
 .cache/
+__pycache__/
+*.py[cod]
+*$py.class
 
-# Ignore backup and temporary files
+# Database files (use cloud databases instead)
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup and temporary files
 *.bak
 *.backup
 *.orig
@@ -72,6 +120,102 @@ model-cache/
 tmp/
 temp/
 
-# Ignore large log files
-*.log
-logs/ 
+# Build artifacts
+*.tsbuildinfo
+next-env.d.ts
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Dependency directories not needed
+jspm_packages/
+bower_components/
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# API keys and sensitive config files (use Vercel env vars)
+secrets.json
+config.local.json
+.env.secrets
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Development-only files
+.local
+local/
+dev/
+
+# Docker files (not needed for Vercel deployment)
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Editor-specific files
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Compiled binary addons
+build/Release
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache
+.parcel-cache
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# MacOS specific
+.AppleDouble
+.LSOverride
+
+# Windows specific
+$RECYCLE_BIN/
+Desktop.ini
+
+# Vi/Vim
+*.swp
+*.swo
+
+# Emacs
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Large files that shouldn't be deployed
+*.tar.gz
+*.zip
+*.rar
+*.7z
+
+# Model files (too large for deployment)
+*.model
+*.weights
+*.bin
+*.onnx
+*.tflite
+*.h5
+models/
+checkpoints/
+
+# Performance and optimization files
+.eslintcache
+.tsbuildinfo 

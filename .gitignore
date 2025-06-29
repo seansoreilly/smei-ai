@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+*.lcov
 
 # next.js
 /.next/
@@ -19,6 +20,7 @@
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
@@ -48,6 +50,7 @@ next-env.d.ts
 .idea/
 *.swp
 *.swo
+*~
 
 # AI/ML specific files
 # Vector embeddings (large files, regenerated from source)
@@ -55,24 +58,39 @@ data/embeddings/
 data/vectors/
 *.embeddings
 *.vectors
+*.pkl
+*.pickle
 
 # Temporary processing files
 data/temp/
 data/tmp/
 *.processing
 *.chunking
+processing/
+tmp/
 
 # Large evaluation datasets (keep summary files, ignore detailed data)
 data/evaluation-results/detailed-*
 data/evaluation-results/raw-*
 !data/evaluation-results/benchmark-summary.json
 !data/evaluation-results/final-performance-report.md
+!data/evaluation-results/evaluation-results.csv
 
 # Generated document chunks (can be regenerated)
 data/chunked-documents/*.jsonl
 data/chunked-documents/document-chunks.json
 !data/chunked-documents/chunking-statistics.json
 !data/chunked-documents/embedding-statistics.json
+
+# Model files and weights
+*.model
+*.weights
+*.bin
+*.onnx
+*.tflite
+*.h5
+models/
+checkpoints/
 
 # Database files
 *.db
@@ -84,10 +102,18 @@ data/chunked-documents/document-chunks.json
 cache/
 *.cache
 model-cache/
+__pycache__/
+*.py[cod]
+*$py.class
 
 # API keys and sensitive config (additional protection)
 secrets.json
 config.local.json
+.env.secrets
+*.key
+*.pem
+*.p12
+*.pfx
 
 # OS generated files
 .DS_Store
@@ -97,14 +123,136 @@ config.local.json
 .Trashes
 ehthumbs.db
 Thumbs.db
+desktop.ini
 
 # Backup files
 *.bak
 *.backup
 *.orig
+*~
 
 # Temporary files
 *.tmp
 *.temp
 tmp/
 temp/
+
+# Log files
+*.log
+logs/
+log/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.coverage
+.nyc_output
+
+# Grunt intermediate storage
+.grunt
+
+# Bower dependency directory
+bower_components
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons
+build/Release
+
+# Dependency directories
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache
+.parcel-cache
+
+# Next.js build output
+.next
+out
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local development files
+.local
+local/
+dev/
+
+# Docker
+.dockerignore
+Dockerfile.local
+
+# MacOS
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# Vi/Vim
+*.swp
+*.swo
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
