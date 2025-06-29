@@ -156,7 +156,7 @@ export class LLMOrchestrationService {
     try {
       const summaryResponse = await limit(() => 
         openai.chat.completions.create({
-          model: 'gpt-3.5-turbo',
+          model: 'gpt-4.1-nano', // Use cheaper model for summarization
           messages: [
             {
               role: 'system',
@@ -260,7 +260,7 @@ export class LLMOrchestrationService {
   ) {
     return limit(() => 
       openai.chat.completions.create({
-        model: options.model || 'gpt-3.5-turbo',
+        model: options.model || 'gpt-4.1-mini',
         messages,
         temperature: options.temperature || 0.7,
         max_tokens: options.max_tokens || 1000,
