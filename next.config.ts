@@ -75,6 +75,37 @@ const nextConfig: NextConfig = {
         ? ['localhost:3000', '127.0.0.1:3000']
         : [process.env.VERCEL_URL].filter(Boolean) as string[]
     }
+  },
+
+  // Webpack configuration to handle Node.js built-in modules
+  webpack: (config, { isServer, dev }) => {
+    // Add fallbacks for Node.js built-in modules in browser environment
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        crypto: false,
+        stream: false,
+        buffer: false,
+        util: false,
+        url: false,
+        querystring: false,
+        path: false,
+        fs: false,
+        net: false,
+        tls: false,
+        dns: false,
+        os: false,
+        events: false,
+        zlib: false,
+        http: false,
+        https: false,
+        punycode: false,
+        process: false,
+        'timers/promises': false,
+      };
+    }
+
+    return config;
   }
 };
 

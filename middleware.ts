@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { initializeDatabase } from './lib/init-db';
 import { getSession } from './lib/sessions';
-import { applyRateLimit } from './lib/rate-limit-middleware';
 
 let dbInitialized = false;
 const API_SECRET = process.env.API_SECRET;
@@ -70,19 +69,13 @@ export async function middleware(request: NextRequest) {
       }
     }
 
-    // Apply rate limiting
-    const rateLimitResponse = await applyRateLimit(request, isAuthenticated, userId);
-    if (rateLimitResponse && rateLimitResponse.status === 429) {
-      return rateLimitResponse;
-    }
-
     // If not authenticated, return 401
     if (!isAuthenticated) {
       return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
 
     // Add CORS headers for API routes
-    const response = rateLimitResponse || NextResponse.next();
+    const response = NextResponse.next();
     
     // Configure CORS
     const origin = request.headers.get('origin');
@@ -101,9 +94,6 @@ export async function middleware(request: NextRequest) {
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-api-key');
     response.headers.set('Access-Control-Allow-Credentials', 'true');
     response.headers.set('Access-Control-Max-Age', '86400'); // 24 hours
-    
-    // Expose rate limit headers to client
-    response.headers.set('Access-Control-Expose-Headers', 'X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-RateLimit-Error');
     
     return response;
   }
