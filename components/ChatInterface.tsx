@@ -8,6 +8,7 @@ import { Message } from "@/lib/db";
 import { MessageItem } from "./MessageItem";
 import { InputBox } from "./InputBox";
 import { Avatar } from "./Avatar";
+import { apiClient } from "@/lib/api-client";
 
 interface ChatInterfaceProps {
   guid: string;
@@ -116,7 +117,7 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
       try {
         setIsLoading(true);
         // First check if conversation exists without creating it
-        const response = await fetch(`/api/conversation/${guid}`);
+        const response = await apiClient.get(`/api/conversation/${guid}`);
         if (response.ok) {
           const data = await response.json();
           setMessages(data.messages || []);
@@ -251,15 +252,9 @@ export function ChatInterface({ guid }: ChatInterfaceProps) {
     let assistantMessageAdded = false;
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          guid,
-          message: content.trim(),
-        }),
+      const response = await apiClient.post("/api/chat", {
+        guid,
+        message: content.trim(),
       }).catch((fetchError) => {
         // Handle network errors, CORS issues, etc.
         console.error("Network error during fetch:", fetchError);

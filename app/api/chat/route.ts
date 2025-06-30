@@ -1,21 +1,28 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { llmOrchestration } from '@/lib/llm-orchestration';
+import { withValidation } from '@/lib/validation/middleware';
+import { validateChatMessage } from '@/lib/validation/schemas';
+import { sanitizeMessage } from '@/lib/sanitize';
 
-export async function POST(request: NextRequest) {
+async function handleChatRequest(
+  request: NextRequest,
+  data: { content: string; guid?: string; message?: string }
+) {
+  const guid = data.guid;
+  const message = sanitizeMessage(data.content || data.message || '');
+
+  if (!guid || !message) {
+    return new NextResponse(
+      JSON.stringify({ error: 'GUID and message are required' }),
+      { 
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }
+
   try {
-    const { guid, message } = await request.json();
-
-    if (!guid || !message) {
-      return new Response(
-        JSON.stringify({ error: 'GUID and message are required' }),
-        { 
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
-    }
-
     const conversationResult = await db`
       SELECT id FROM conversations WHERE guid = ${guid}
     `;
@@ -71,7 +78,7 @@ export async function POST(request: NextRequest) {
       }) as unknown as AsyncIterable<any>;
     } catch (error) {
       console.error('Failed to create chat completion:', error);
-      return new Response(
+      return new NextResponse(
         JSON.stringify({ error: 'Failed to initialize chat stream' }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
       );
@@ -121,7 +128,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return new Response(readableStream, {
+    return new NextResponse(readableStream, {
       headers: {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
@@ -131,7 +138,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Error processing chat request:', error);
-    return new Response(
+    return new NextResponse(
       JSON.stringify({ error: 'Failed to process chat request' }),
       { 
         status: 500,
@@ -140,3 +147,5 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export const POST = withValidation(validateChatMessage, handleChatRequest);

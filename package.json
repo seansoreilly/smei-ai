@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migrate": "tsx scripts/run-migrations.ts"
   },
   "dependencies": {
     "@langchain/textsplitters": "^0.1.0",
@@ -15,10 +16,13 @@
     "@tailwindcss/typography": "^0.5.16",
     "@types/pdfkit": "^0.14.0",
     "@types/uuid": "^10.0.0",
+    "@upstash/ratelimit": "^2.0.5",
+    "@upstash/redis": "^1.35.0",
     "autoprefixer": "^10.4.21",
     "dotenv": "^16.6.0",
     "js-yaml": "^4.1.0",
     "langchain": "^0.3.29",
+    "language-subtag-registry": "^0.3.23",
     "lucide-react": "^0.475.0",
     "next": "15.3.4",
     "openai": "^5.8.1",
@@ -31,6 +35,7 @@
     "tailwindcss": "^3.4.17",
     "task-master": "^2.3.0",
     "tiktoken": "^1.0.21",
+    "tsconfig-paths": "^4.2.0",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
@@ -41,6 +46,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "^5"
   }
 }

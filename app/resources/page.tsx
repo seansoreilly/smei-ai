@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Search, Calculator, BookOpen } from 'lucide-react';
+import { apiClient } from '@/lib/api-client';
 
 interface AIProduct {
   id: string;
@@ -63,7 +64,7 @@ export default function ResourcesPage() {
   const loadResources = async () => {
     try {
       // Load products from API
-      const productsResponse = await fetch('/api/resources/products');
+      const productsResponse = await apiClient.get('/api/resources/products');
       if (productsResponse.ok) {
         const productsData = await productsResponse.json();
         setProducts(productsData);
