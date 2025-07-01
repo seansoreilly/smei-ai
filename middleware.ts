@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { initializeDatabase } from './lib/init-db';
 import { getSession } from './lib/sessions';
+import { ALLOWED_ORIGINS, buildCsp, HSTS_HEADER } from './lib/config/security';
 
 let dbInitialized = false;
 const API_SECRET = process.env.API_SECRET;
@@ -9,6 +10,19 @@ const publicRoutes = [
   '/api/auth/login',
   '/api/auth/logout',
 ];
+
+function addSecurityHeaders(response: NextResponse, nonce: string) {
+  // Add CSP header
+  response.headers.set('Content-Security-Policy', buildCsp(nonce, process.env.NODE_ENV === 'production'));
+  response.headers.set('X-Nonce', nonce);
+  
+  // Add HSTS header (only in production)
+  if (process.env.NODE_ENV === 'production') {
+    response.headers.set(HSTS_HEADER.key, HSTS_HEADER.value);
+  }
+  
+  return response;
+}
 
 export async function middleware(request: NextRequest) {
   if (!dbInitialized) {
@@ -23,33 +37,50 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
+  // Generate nonce for CSP
+  const nonce = Buffer.from(crypto.getRandomValues(new Uint8Array(16))).toString('base64');
+  const csp = buildCsp(nonce, process.env.NODE_ENV === 'production');
+
+  // Handle _next/image endpoint CORS
+  if (pathname.startsWith('/_next/image')) {
+    const origin = request.headers.get('origin') ?? '';
+    const response = NextResponse.next();
+    
+    if (ALLOWED_ORIGINS.includes(origin)) {
+      response.headers.set('Access-Control-Allow-Origin', origin);
+      response.headers.set('Vary', 'Origin');
+    } else {
+      // Remove any pre-existing wildcard injected by default server
+      response.headers.delete('Access-Control-Allow-Origin');
+    }
+    
+    return addSecurityHeaders(response, nonce);
+  }
+
   // Skip auth and rate limiting for public routes
   if (publicRoutes.includes(pathname)) {
-    return NextResponse.next();
+    const response = NextResponse.next();
+    return addSecurityHeaders(response, nonce);
   }
 
   if (pathname.startsWith('/api')) {
     // Handle CORS preflight requests
     if (request.method === 'OPTIONS') {
       const origin = request.headers.get('origin');
-      const allowedOrigins = process.env.NODE_ENV === 'development' 
-        ? ['http://localhost:3000', 'http://127.0.0.1:3000']
-        : [process.env.VERCEL_URL].filter(Boolean);
-      
       const response = new NextResponse(null, { status: 204 });
       
-      if (origin && allowedOrigins.includes(origin)) {
+      if (origin && ALLOWED_ORIGINS.includes(origin)) {
         response.headers.set('Access-Control-Allow-Origin', origin);
-      } else if (!origin) {
-        response.headers.set('Access-Control-Allow-Origin', '*');
+        response.headers.set('Vary', 'Origin');
       }
+      // Remove wildcard CORS - no fallback to '*'
       
       response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
       response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-api-key');
       response.headers.set('Access-Control-Allow-Credentials', 'true');
       response.headers.set('Access-Control-Max-Age', '86400');
       
-      return response;
+      return addSecurityHeaders(response, nonce);
     }
 
     const apiKey = request.headers.get('x-api-key');
@@ -79,28 +110,25 @@ export async function middleware(request: NextRequest) {
     
     // Configure CORS
     const origin = request.headers.get('origin');
-    const allowedOrigins = process.env.NODE_ENV === 'development' 
-      ? ['http://localhost:3000', 'http://127.0.0.1:3000']
-      : [process.env.VERCEL_URL].filter(Boolean);
     
-    if (origin && allowedOrigins.includes(origin)) {
+    if (origin && ALLOWED_ORIGINS.includes(origin)) {
       response.headers.set('Access-Control-Allow-Origin', origin);
-    } else if (!origin) {
-      // Allow same-origin requests
-      response.headers.set('Access-Control-Allow-Origin', '*');
+      response.headers.set('Vary', 'Origin');
     }
+    // Remove wildcard CORS - no fallback to '*'
     
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-api-key');
     response.headers.set('Access-Control-Allow-Credentials', 'true');
     response.headers.set('Access-Control-Max-Age', '86400'); // 24 hours
     
-    return response;
+    return addSecurityHeaders(response, nonce);
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+  return addSecurityHeaders(response, nonce);
 }
 
 export const config = {
-  matcher: '/((?!_next/static|_next/image|favicon.ico).*)',
+  matcher: '/((?!_next/static|favicon.ico).*)',
 };

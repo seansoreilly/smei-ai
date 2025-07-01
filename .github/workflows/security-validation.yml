@@ -1,0 +1,67 @@
+name: Security Validation
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    # Run nightly at 02:00 UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  security-validation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run security validation
+      run: npm run security:validate
+      env:
+        NODE_ENV: production
+        
+    - name: Check for security regressions
+      run: |
+        # Basic header validation
+        echo "Validating security configuration..."
+        
+        # Check that wildcard CORS is not present in source
+        if grep -r "Access-Control-Allow-Origin.*\*" lib/ middleware.ts; then
+          echo "❌ Wildcard CORS found in source code"
+          exit 1
+        fi
+        
+        # Check that unsafe CSP directives are not present
+        if grep -r "unsafe-inline\|unsafe-eval" lib/ middleware.ts next.config.ts; then
+          echo "❌ Unsafe CSP directives found in source code"
+          exit 1
+        fi
+        
+        # Check that HSTS configuration is present
+        if ! grep -r "Strict-Transport-Security" lib/config/security.ts; then
+          echo "❌ HSTS configuration not found"
+          exit 1
+        fi
+        
+        echo "✅ Security validation passed"
+        
+    - name: Upload security report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-validation-report
+        path: |
+          build-output.log
+          security-report.json
+        retention-days: 30

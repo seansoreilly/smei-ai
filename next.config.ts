@@ -25,23 +25,6 @@ const SECURITY_HEADERS = [
   {
     key: 'Strict-Transport-Security',
     value: process.env.NODE_ENV === 'production' ? 'max-age=63072000; includeSubDomains; preload' : ''
-  },
-  {
-    key: 'Content-Security-Policy',
-    value: [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // Next.js requires unsafe-inline for dev
-      "style-src 'self' 'unsafe-inline'", // Tailwind requires unsafe-inline
-      "img-src 'self' data: https: blob:",
-      "font-src 'self' data:",
-      "connect-src 'self' https://api.openai.com https://*.anthropic.com https://*.neon.tech",
-      "media-src 'self'",
-      "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'none'",
-      "upgrade-insecure-requests"
-    ].join('; ')
   }
 ].filter(header => header.value); // Remove empty headers
 
